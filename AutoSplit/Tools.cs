@@ -44,13 +44,48 @@ namespace AutoSplit
 
         public static decimal GetBalance()
         {
-            var json = HttpPost("http://localhost:20332", "{'jsonrpc': '2.0','method': 'getbalance','params': ['602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7'],'id': 1}");
+            var json = HttpPost("http://localhost:10332", "{'jsonrpc': '2.0','method': 'getbalance','params': ['c56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b'],'id': 1}");
             return (decimal)JObject.Parse(json)["result"]["confirmed"];
         }
 
         public static bool Send(string to, decimal value)
         {
-            var json = HttpPost("http://localhost:20332", $"{{'jsonrpc': '2.0','method': 'sendtoaddress','params': ['602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7','{to}',{value}],'id': 1}}");
+            var json = HttpPost("http://localhost:10332", $@"
+            {{
+                'jsonrpc': '2.0',
+                'method': 'sendtoaddress',
+                'params': [
+                    'c56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b',
+                    '{to}',
+                    {value}
+                ],
+                'id': 1
+            }}");
+            var a = JObject.Parse(json)["result"];
+            return a != null;
+        }
+
+
+
+        public static bool Send(string to, decimal value, string changeAddress)
+        {
+            var json = HttpPost("http://localhost:10332", $@"
+            {{
+                'jsonrpc': '2.0',
+                'method': 'sendmany',
+                'params': [
+                    [
+                        {{
+                            'asset': 'c56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b',
+                            'value': {value},
+                            'address': '{to}'
+                        }}
+                    ],
+                    0,
+                    '{changeAddress}'
+                ],
+                'id': 1
+            }}");
             var a = JObject.Parse(json)["result"];
             return a != null;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -11,9 +12,12 @@ namespace AutoSplit
     {
         static void Main(string[] args)
         {
+            var address = File.ReadAllLines("address.txt");
+            var random = new Random();
+
             //初始金额
             var initConfirmd = Tools.GetBalance();
-            if(initConfirmd == 0)
+            if (initConfirmd == 0)
             {
                 Console.WriteLine("余额不足");
                 Console.ReadLine();
@@ -25,12 +29,14 @@ namespace AutoSplit
                 //实际金额
                 var confirmd = Tools.GetBalance();
                 //每次转账金额
-                var value = initConfirmd / (decimal)Math.Pow(2, i);
+                var value = (int)(initConfirmd / (decimal)Math.Pow(2, i));
                 for (int j = 1; j <= Math.Pow(2, i); j++)
                 {
-                    if (Tools.Send("AcdB……钱包地址", value))
+                    var index = random.Next(0, address.Length);
+                    var index2 = random.Next(0, address.Length);
+                    if (Tools.Send(address[index], value, address[index2]))
                     {
-                        Console.WriteLine($"{i} 转账成功：{value}\t{j}");
+                        Console.WriteLine($"{i} 转账成功：{address[index]} {value}\t{j}");
                     }
                 }
                 confirmd = Tools.GetBalance();
