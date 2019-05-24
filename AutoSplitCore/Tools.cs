@@ -52,7 +52,7 @@ namespace AutoSplitCore
         public static bool Send(string to, decimal value, string changeAddress = null)
         {
             var json = changeAddress == null ?
-            HttpPost("http://localhost:10332", $@"
+            HttpPost("http://localhost:20332", $@"
             {{
                 'jsonrpc': '2.0',
                 'method': 'sendtoaddress',
@@ -62,7 +62,7 @@ namespace AutoSplitCore
                     {value}
                 ],
                 'id': 1
-            }}"): HttpPost("http://localhost:10332", $@"
+            }}"): HttpPost("http://localhost:20332", $@"
             {{
                 'jsonrpc': '2.0',
                 'method': 'sendmany',
